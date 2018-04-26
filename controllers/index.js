@@ -95,7 +95,77 @@ exports.postCommentForAnArticle = (req, res, next) => {
     created_at: new Date().toLocaleString()
   })
     .then(comment => {
+      return Promise.all([
+        Articles.findOneAndUpdate(
+          { _id: comment.belongs_to },
+          { $inc: { comments: 1 } }
+        ),
+        comment
+      ]);
+    })
+    .then(([result, comment]) => {
       res.status(201).send({ comment });
     })
     .catch(err => next(err));
+};
+
+exports.updateVoteCount = (req, res, next) => {
+  if (req.query.vote === "up") {
+    return Articles.findOneAndUpdate(
+      { _id: req.params.article_id },
+      { $inc: { votes: 1 } }
+    )
+      .then(article => {
+        res.send({ article });
+      })
+      .catch(err => next(err));
+  } else if (req.query.vote === "down") {
+    return Articles.findOneAndUpdate(
+      { _id: req.params.article_id },
+      { $inc: { votes: -1 } }
+    )
+      .then(article => {
+        res.send({ article });
+      })
+      .catch(err => next(err));
+  } else next({ status: 404, message: "Route not found" });
+};
+
+exports.updateCommentVote = (req, res, next) => {
+  if (req.query.vote === "up") {
+    return Comments.findOneAndUpdate(
+      { _id: req.params.comment_id },
+      { $inc: { votes: 1 } }
+    )
+      .then(comment => {
+        res.send({ comment });
+      })
+      .catch(err => next(err));
+  } else if (req.query.vote === "down") {
+    return Comments.findOneAndUpdate(
+      { _id: req.params.comment_id },
+      { $inc: { votes: -1 } }
+    )
+      .then(comment => {
+        res.send({ comment });
+      })
+      .catch(err => next(err));
+  } else next({ status: 404, message: "Route not found" });
+};
+
+exports.deleteCommentById = (req, res, next) => {
+  return Comments.findByIdAndRemove({ _id: req.params.comment_id })
+    .then(comment => {
+      return Promise.all([
+        Articles.findOneAndUpdate(
+          { _id: comment.belongs_to },
+          { $inc: { comments: -1 } }
+        ),
+        comment
+      ]);
+    })
+    .then(([article, comment]) => {
+      res.send({ comment });
+    })
+    .catch(err => next({ status: 404, message: err }));
 };

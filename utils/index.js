@@ -31,14 +31,14 @@ exports.formatArticlesData = (articlesData, topicIds, userIds) => {
           ? getUserId(userIds)
           : getRandomUserId(userIds),
       vote: 0,
-      comments: random(1, 3)
+      comments: process.env.NODE_ENV === "test" ? 1 : random(1, 3)
     };
   });
 };
 
 exports.formatCommentsData = (articlesData, userIds, articleIds) => {
   //In 'development' environment for every article we have random number of comments
-  //const numberofComments = random(1, 3);
+
   return articlesData.reduce((acc, article) => {
     for (let i = 0; i < article.comments; i++) {
       const obj = {
