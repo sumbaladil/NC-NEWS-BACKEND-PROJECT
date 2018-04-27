@@ -99,7 +99,7 @@ describe("/", () => {
           expect(res.body.articles[0].body).to.equal(
             "I find this existence challenging"
           );
-          expect(res.body.articles[0].created_by).to.be.equal(
+          expect(res.body.articles[0].created_by._id).to.be.equal(
             String(seedUsers[0]._id)
           );
         });
@@ -281,7 +281,7 @@ describe("/", () => {
   });
 
   //DELETE /api/comments/:comment_id
-  describe.only("/api/comments/:comment_id", () => {
+  describe("/api/comments/:comment_id", () => {
     it("Delete /api/comments/:comment_id", () => {
       return request
         .delete(`/api/comments/${seedComments[0]._id}`)

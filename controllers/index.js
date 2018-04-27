@@ -22,6 +22,7 @@ exports.getTopicById = (req, res, next) => {
 exports.getArticleForCertainTopic = (req, res, next) => {
   return Articles.find({ belongs_to: req.params.topic })
     .populate("belongs_to", "slug")
+    .populate("created_by", "name")
     .then(articles => {
       res.send({ articles });
     })
@@ -90,6 +91,8 @@ exports.getAnIndiviualArticle = (req, res, next) => {
 };
 
 exports.postCommentForAnArticle = (req, res, next) => {
+  console.log(req.params.article_id);
+  console.log(req.body.created_by);
   return Comments.create({
     body: req.body.body,
     belongs_to: req.params.article_id,
@@ -98,6 +101,7 @@ exports.postCommentForAnArticle = (req, res, next) => {
     created_at: new Date().toLocaleString()
   })
     .then(comment => {
+      console.log(comment);
       return Promise.all([
         Articles.findOneAndUpdate(
           { _id: comment.belongs_to },
@@ -110,9 +114,10 @@ exports.postCommentForAnArticle = (req, res, next) => {
     .then(([result, comment]) => {
       res.status(201).send({ comment });
     })
-    .catch(err =>
-      next({ error: 404, message: "No article exists for this id" })
-    );
+    .catch(err => {
+      console.log("I am in catch");
+      next({ error: 404, message: "Invalid userId/ articleId" });
+    });
 };
 
 exports.updateArticleVoteCount = (req, res, next) => {
@@ -194,5 +199,17 @@ exports.getUserById = (req, res, next) => {
     })
     .catch(err => {
       next({ error: 404, message: "User id is invalid" });
+    });
+};
+
+exports.getCommentById = (req, res, next) => {
+  return Comments.findById({ _id: req.params.comment_id })
+    .then(comment => {
+      if (comment === null)
+        next({ error: 404, message: "Comment does not exist" });
+      else res.send({ comment });
+    })
+    .catch(err => {
+      next({ error: 404, message: "Comment id is invalid" });
     });
 };

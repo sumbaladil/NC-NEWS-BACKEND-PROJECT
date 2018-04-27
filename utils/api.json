@@ -9,7 +9,9 @@
         "Returns all the comments for a individual article",
       "GET /api/users": "Returns a JSON object with all the existing users",
       "GET /api/users/:username":
-        "Returns a JSON object with the profile data for the specified user."
+        "Returns a JSON object with the profile data for the specified user.",
+      "GET /api/comments/:comment_id":
+        "Returns a JSON object of comment data with specific id"
     },
 
     "POST requests": {

@@ -44,15 +44,12 @@ function seedDB(topicsData, userData, articlesData) {
         process.env.NODE_ENV === "development" ||
         process.env.NODE_ENV === "production"
       ) {
-        console.log("I am in development environment");
         formattedComments = formatCommentsData(
           articleDocs,
           userIds,
           articleIds
         );
       } else if (process.env.NODE_ENV === "test") {
-        console.log("Hi I am in test environment");
-
         formattedComments = formatCommentsDataTest(
           articleDocs,
           userIds,
