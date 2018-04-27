@@ -3,6 +3,6 @@ const router = express.Router();
 const { getAllUsers, getUserById } = require("../controllers");
 
 router.get("/", getAllUsers);
-//GET /api/users/:username
 router.get("/:username", getUserById);
+
 module.exports = router;
