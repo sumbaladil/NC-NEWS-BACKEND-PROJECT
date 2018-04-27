@@ -8,6 +8,7 @@ const {
 } = require("../utils");
 
 function seedDB(topicsData, userData, articlesData) {
+  console.log(userData);
   let users;
   return mongoose.connection
     .dropDatabase()
@@ -39,7 +40,10 @@ function seedDB(topicsData, userData, articlesData) {
       //if its dev environment call formatCommentsData
 
       let formattedComments;
-      if (process.env.NODE_ENV === "development") {
+      if (
+        process.env.NODE_ENV === "development" ||
+        process.env.NODE_ENV === "production"
+      ) {
         console.log("I am in development environment");
         formattedComments = formatCommentsData(
           articleDocs,
