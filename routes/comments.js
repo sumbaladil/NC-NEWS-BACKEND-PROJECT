@@ -7,8 +7,7 @@ const {
 } = require("../controllers");
 
 router.get("/", getAllComments);
-
 router.put("/:comment_id", updateCommentVote);
-
 router.delete("/:comment_id", deleteCommentById);
+
 module.exports = router;

@@ -3,12 +3,16 @@ const mongoose = require("mongoose");
 const apiRouter = require("./routes/api");
 const DB_URL = require("./config");
 const bodyParser = require("body-parser");
-
+const apiPage = require("./utils/api.json");
 const app = express();
 app.use(bodyParser());
 
 mongoose.connect(DB_URL).then(() => {
   console.log(`connected to ${DB_URL}`);
+});
+
+app.get("/", (req, res, next) => {
+  res.send(apiPage);
 });
 
 app.use("/api", apiRouter);

@@ -1,28 +1,31 @@
 const { Users, Articles, Comments, Topics } = require("../models");
 const { generateArticle } = require("../utils");
+
 exports.getAllTopics = (req, res, next) => {
   return Topics.find()
     .then(topics => {
       res.send({ topics });
     })
-    .catch(err => next(err));
+    .catch(err => next({ error: 404, message: "Topics not found" }));
 };
 
-exports.getTopicBySlug = (req, res, nex) => {
-  return Topics.find({ slug: `${req.params.topic}` })
+exports.getTopicById = (req, res, next) => {
+  return Topics.find({ _id: `${req.params.topic}` })
     .then(topics => {
       res.send({ topics });
     })
-    .catch(err => next(err));
+    .catch(err => {
+      next({ error: 404, message: "Topic does not exist" });
+    });
 };
 
-exports.getArticleForCertainTopic = (req, res, nex) => {
+exports.getArticleForCertainTopic = (req, res, next) => {
   return Articles.find({ belongs_to: req.params.topic })
     .populate("belongs_to", "slug")
     .then(articles => {
       res.send({ articles });
     })
-    .catch(err => next(err));
+    .catch(err => next({ error: 404, message: "Article does not exist" }));
 };
 
 exports.postArticleForCertainTopic = (req, res, next) => {
@@ -36,7 +39,7 @@ exports.postArticleForCertainTopic = (req, res, next) => {
     .then(article => {
       res.status(201).send({ article });
     })
-    .catch(err => next(err));
+    .catch(err => next({ error: 404, message: "Article does not exist" }));
 };
 exports.getAllCommentsForAnArticle = (req, res, next) => {
   return Comments.find({ belongs_to: req.params.article_id })
@@ -44,7 +47,7 @@ exports.getAllCommentsForAnArticle = (req, res, next) => {
     .then(comments => {
       res.send({ comments });
     })
-    .catch(err => next(err));
+    .catch(err => next({ error: 404, message: "Comments does not exists" }));
 };
 
 exports.getAllArticles = (req, res, next) => {
@@ -54,7 +57,7 @@ exports.getAllArticles = (req, res, next) => {
     .then(articles => {
       res.send({ articles });
     })
-    .catch(err => next(err));
+    .catch(err => next({ error: 404, message: "Article does not exist" }));
 };
 
 exports.getAllComments = (req, res, next) => {
@@ -64,7 +67,7 @@ exports.getAllComments = (req, res, next) => {
     .then(comments => {
       res.send({ comments });
     })
-    .catch(err => next(err));
+    .catch(err => next({ error: 404, message: "Comments does not exists" }));
 };
 
 exports.getAllUsers = (req, res, next) => {
@@ -72,7 +75,7 @@ exports.getAllUsers = (req, res, next) => {
     .then(users => {
       res.send({ users });
     })
-    .catch(err => next(err));
+    .catch(err => next({ error: 404, message: "No user exists" }));
 };
 
 exports.getAnIndiviualArticle = (req, res, next) => {
@@ -83,7 +86,7 @@ exports.getAnIndiviualArticle = (req, res, next) => {
     .then(article => {
       res.send({ article });
     })
-    .catch(err => next(err));
+    .catch(err => next({ error: 404, message: "Article does not exist" }));
 };
 
 exports.postCommentForAnArticle = (req, res, next) => {
@@ -98,7 +101,8 @@ exports.postCommentForAnArticle = (req, res, next) => {
       return Promise.all([
         Articles.findOneAndUpdate(
           { _id: comment.belongs_to },
-          { $inc: { comments: 1 } }
+          { $inc: { comments: 1 } },
+          { new: true }
         ),
         comment
       ]);
@@ -106,28 +110,32 @@ exports.postCommentForAnArticle = (req, res, next) => {
     .then(([result, comment]) => {
       res.status(201).send({ comment });
     })
-    .catch(err => next(err));
+    .catch(err =>
+      next({ error: 404, message: "No article exists for this id" })
+    );
 };
 
-exports.updateVoteCount = (req, res, next) => {
+exports.updateArticleVoteCount = (req, res, next) => {
   if (req.query.vote === "up") {
     return Articles.findOneAndUpdate(
       { _id: req.params.article_id },
-      { $inc: { votes: 1 } }
+      { $inc: { votes: 1 } },
+      { new: true }
     )
       .then(article => {
-        res.send({ article });
+        res.status(201).send({ article });
       })
       .catch(err => next(err));
   } else if (req.query.vote === "down") {
     return Articles.findOneAndUpdate(
       { _id: req.params.article_id },
-      { $inc: { votes: -1 } }
+      { $inc: { votes: -1 } },
+      { new: true }
     )
       .then(article => {
-        res.send({ article });
+        res.status(201).send({ article });
       })
-      .catch(err => next(err));
+      .catch(err => next({ error: 404, message: "route not found" }));
   } else next({ status: 404, message: "Route not found" });
 };
 
@@ -135,21 +143,28 @@ exports.updateCommentVote = (req, res, next) => {
   if (req.query.vote === "up") {
     return Comments.findOneAndUpdate(
       { _id: req.params.comment_id },
-      { $inc: { votes: 1 } }
+      { $inc: { votes: 1 } },
+      { new: true }
     )
+      .populate("created_by", "name")
+      .populate("belongs_to", "title")
+
       .then(comment => {
-        res.send({ comment });
+        res.status(201).send({ comment });
       })
-      .catch(err => next(err));
+      .catch(err => next({ error: 404, message: "route not found" }));
   } else if (req.query.vote === "down") {
     return Comments.findOneAndUpdate(
       { _id: req.params.comment_id },
-      { $inc: { votes: -1 } }
+      { $inc: { votes: -1 } },
+      { new: true }
     )
+      .populate("created_by", "name")
+      .populate("belongs_to", "title")
       .then(comment => {
-        res.send({ comment });
+        res.status(201).send({ comment });
       })
-      .catch(err => next(err));
+      .catch(err => next({ error: 404, message: "route not found" }));
   } else next({ status: 404, message: "Route not found" });
 };
 
@@ -159,13 +174,25 @@ exports.deleteCommentById = (req, res, next) => {
       return Promise.all([
         Articles.findOneAndUpdate(
           { _id: comment.belongs_to },
-          { $inc: { comments: -1 } }
+          { $inc: { comments: -1 } },
+          { new: true }
         ),
         comment
       ]);
     })
+
     .then(([article, comment]) => {
       res.send({ comment });
     })
-    .catch(err => next({ status: 404, message: err }));
+    .catch(err => next({ status: 404, message: `Comment does not exist` }));
+};
+
+exports.getUserById = (req, res, next) => {
+  return Users.findById({ _id: req.params.username })
+    .then(user => {
+      res.send({ user });
+    })
+    .catch(err => {
+      next({ error: 404, message: "User id is invalid" });
+    });
 };

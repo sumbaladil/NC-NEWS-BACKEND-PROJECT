@@ -244,6 +244,60 @@ describe("/", () => {
     });
   });
 
+  //PUT /api/articles/:article_id
+  describe("/api/articles/:article_id?vote=up", () => {
+    it("/api/articles/:article_id?vote=up", () => {
+      return request
+        .put(`/api/articles/${seedArticles[0]._id}?vote=up`)
+        .expect(201)
+        .then(res => {
+          const keys = [
+            "title",
+            "comments",
+            "votes",
+            "body",
+            "belongs_to",
+            "created_by",
+            "_id",
+            "__v"
+          ];
+          expect(res.body).to.have.all.keys("article");
+          expect(res.body.article).to.have.all.keys(...keys);
+          expect(res.body.article.votes).to.equal(1); //one vote added
+        });
+    });
+  });
+
+  //PUT /api/comments/:comment_id
+  describe("/api/comments/:comment_id?vote=up", () => {
+    it("/api/comments/:comment_id?vote=up", () => {
+      return request
+        .put(`/api/comments/${seedComments[0]._id}?vote=up`)
+        .expect(201)
+        .then(res => {
+          expect(res.body.comment.votes).to.equal(1); //vote count added
+        });
+    });
+  });
+
+  //DELETE /api/comments/:comment_id
+  describe.only("/api/comments/:comment_id", () => {
+    it("Delete /api/comments/:comment_id", () => {
+      return request
+        .delete(`/api/comments/${seedComments[0]._id}`)
+        .expect(200)
+        .then(res => {
+          expect(res.body.comment._id).to.equal(`${seedComments[0]._id}`); //vote count added
+          return request
+            .get(`/api/articles/${res.body.comment.belongs_to}`)
+            .expect(200)
+            .then(res => {
+              expect(res.body.article[0].comments).to.equal(0); // as comment been deleted
+            });
+        });
+    });
+  });
+
   describe("api/users", () => {
     it("Gets the json object from all the users", () => {
       return request
@@ -263,15 +317,22 @@ describe("/", () => {
     });
   });
 
-  // describe.only("api/comments", () => {
-  //   it("Gets the json object from all the commnents", () => {
-  //     return request
-  //       .get("/api/comments")
-  //       .expect(200)
-  //       .then(res => {
-  //         expect(res.body).to.have.all.keys("comments");
-  //         expect(res.body.comments.length).to.equal(4); // one comment for each 4 articles
-  //       });
-  //   });
-  // });
+  describe("api/users", () => {
+    it("Gets the json object from all the users", () => {
+      return request
+        .get("/api/users")
+        .expect(200)
+        .then(res => {
+          const keys = ["username", "name", "avatar_url", "_id", "__v"];
+          expect(res.body).to.have.all.keys("users");
+          expect(res.body.users[0]).to.have.all.keys(...keys);
+          expect(res.body.users[0].username).to.equal("butter_bridge");
+          expect(res.body.users[0].name).to.equal("jonny");
+          expect(res.body.users[0].avatar_url).to.equal(
+            "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+          );
+          expect(res.body.users.length).to.equal(2);
+        });
+    });
+  });
 });
