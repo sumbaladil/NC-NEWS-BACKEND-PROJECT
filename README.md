@@ -37,14 +37,16 @@ Once forked copy the link from the green `Clone or Download` button.
 Make a folder e.g News and through terminal cd into it , cd into BE-FT-northcoders-news, then git clone and paste the link.
 
 ```
-cd News--
+cd News
 cd BE-FT-northcoders-news
 git clone (add the link you copied from repo)
 ```
 
 Also run command:
 
-`code .`
+```
+code .
+```
 
 in terminal, this should open this folder in VS code
 
@@ -52,7 +54,7 @@ in terminal, this should open this folder in VS code
 
 Once this folder is opened in VS code, make a folder `config` on same level as models & controllers etc.
 
-Then make files `index.js`, `development.js` and `test.js`.
+Then make files index.js, development.js and test.js.
 
 Following code needs to be added above files
 
@@ -60,67 +62,57 @@ Following code needs to be added above files
 
 Add follwing code in index.js file
 
-````
+```
 const path = process.env.NODE_ENV || "development";
 
 module.exports = require(`./${path}`);
-
 ```
+
 ##### development.js
 
 Add follwing code in index.js file
-```
 
+```
 module.exports = {
 DB: "mongodb://localhost:27017/northcoders_news"
 };
-
 ```
+
 ##### test.js
 
 Add follwing code in test.js file
-```
 
+```
 module.exports = {
 DB: "mongodb://localhost:27017/northcoders_news_test"
 };
-
 ```
+
 ### Installing
 
 In integrated terminal run following commands:
-```
 
-npm install (this will install all dependencies for you )
+```
+npm install
 npm install supertest mocha
 npm install nodemon
-
 ```
+
 ### Running MongoDB Server
 
-In seperate terminal, run:
-```
+In seperate terminal, run following command to run MongoDB server:
 
-mongod ```
-(this will start mongoDb server and start listening to request)
+```
+mongod
+```
 
 ### Seeding
 
-1: For development run:
-````
+For development run following command to seed develpment data in MongoDB
 
+```
 npm run seed:dev
-
 ```
-(this will seed develpment data in MongoDB)
-
-2: For tests run:
-```
-
-npm test
-
-```
-(this will seed test data in MongoDB)
 
 ### Running the tests
 
@@ -128,25 +120,28 @@ All the tests for this project is in spec/index.spec.js.
 Tests will be using test data from seed/testData as this is small set of data and is for testing pupose only.
 This data is seeded before each test and after performing all the test, the database disconnects.
 
-Run command;
-```
+Run following command to see the results of all the tests.
 
+```
 npm test
-
-```
-to see the results of all the tests.
-
-Note: If you want to run a specific test write .only after describe in the test case like this:
 ```
 
+Note: If you want to run a specific test write `.only` after describe in the test case like this:
+
+```
 describe.only("api/topic...)
+```
 
-````
 ### Running App
 
-1: run `npm run dev` in integrated terminal. It should show you connection message.
-2: If you want to see all enpoints working, use POSTMAN and use `localhost:9090/api` and check it's functionality
-3: You can check my functioning API at https://northcoders-news-1.herokuapp.com/
+1: run following command in integrated terminal. It should show you connection message.
+
+```
+npm run dev
+```
+
+2: If you want to see all endpoints working, use POSTMAN and use `localhost:9090/api` and check its functionality.
+3: You can check my functioning API at https://northcoders-news-1.herokuapp.com.
 
 ### Routes
 
@@ -253,11 +248,12 @@ Its development data has been taken from [Mlab](https://mlab.com) which was seed
 
 ### Built With
 
-Restful APIs
-Node.js framework
-Promises
-Express server
-MongoDB
+* [Restful APIs]()
+* [node.js framework](https://nodejs.org)
+* [Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+* [Express server](https://www.npmjs.com/package/express)
+* [MongoDB]()
+* [mongoose package](https://www.npmjs.com/package/mongooses)
 
 ### Author & Developer
 
@@ -265,5 +261,4 @@ Sumbal Adil
 
 ### Acknowledgments
 
-[Northcoders](https://northcoders.com) for giving me the knowledge to make this project.
-````
+[Northcoders](https://northcoders.com) has given me the knowledge & support to make this project.
