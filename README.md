@@ -90,12 +90,16 @@ DB: "mongodb://localhost:27017/northcoders_news_test"
 
 ### Installing
 
-In integrated terminal run following commands:
+In integrated terminal run following commands to install dependencies:
 
 ```
 npm install
-npm install supertest mocha
-npm install nodemon
+```
+
+run following command to install dev dependencies
+
+```
+npm install -D
 ```
 
 ### Running MongoDB Server
