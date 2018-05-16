@@ -8,7 +8,6 @@ const {
 } = require("../utils");
 
 function seedDB(topicsData, userData, articlesData) {
-  console.log(userData);
   let users;
   return mongoose.connection
     .dropDatabase()

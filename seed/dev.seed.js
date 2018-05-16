@@ -5,9 +5,6 @@ const topicsData = require("./devData/topics");
 const usersData = require("./devData/users");
 const articlesData = require("./devData/articles");
 
-console.log(topicsData);
-console.log(DB);
-
 mongoose
   .connect(DB)
   .then(() => seedDB(topicsData, usersData, articlesData))

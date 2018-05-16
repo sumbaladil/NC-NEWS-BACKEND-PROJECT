@@ -14,20 +14,6 @@ I have also built a functioning API at https://northcoders-news-1.herokuapp.com/
 
 ### Getting Started
 
-#### Setting up your Dev environment
-
-You will need to install the following programs:
-
-* [Chrome Browser](https://www.google.com/chrome/browser/desktop/index.html)
-* [VS Code Text Editor](https://code.visualstudio.com/download)
-* [Postman](https://www.getpostman.com/docs/v6/postman/launching_postman/installation_and_updates)
-
-Next, follow these instructions for setting up your development environment on the appropriate
-operating system:
-
-* [Instructions for Mac](https://github.com/northcoders/setup-guides/tree/master/OSX)
-* [Instructions for Linux](https://github.com/northcoders/setup-guides/tree/master/Linux)
-
 #### Cloning repo from Github
 
 Fork this repo from https://github.com/sumbaladil/BE-FT-northcoders-news to you github account.

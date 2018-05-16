@@ -2,9 +2,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 const apiRouter = require("./routes/api");
 const DB = process.env.DB || require("./config").DB;
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express();
 app.use(bodyParser());
+app.use(cors());
 
 mongoose
   .connect(DB)

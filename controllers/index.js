@@ -80,7 +80,6 @@ exports.getAllUsers = (req, res, next) => {
 };
 
 exports.getAnIndiviualArticle = (req, res, next) => {
-  console.log(req.params.article_id);
   return Articles.find({ _id: req.params.article_id })
     .populate("belongs_to", "slug ")
     .populate("created_by", "username")
@@ -91,8 +90,6 @@ exports.getAnIndiviualArticle = (req, res, next) => {
 };
 
 exports.postCommentForAnArticle = (req, res, next) => {
-  console.log(req.params.article_id);
-  console.log(req.body.created_by);
   return Comments.create({
     body: req.body.body,
     belongs_to: req.params.article_id,
@@ -101,7 +98,6 @@ exports.postCommentForAnArticle = (req, res, next) => {
     created_at: new Date().toLocaleString()
   })
     .then(comment => {
-      console.log(comment);
       return Promise.all([
         Articles.findOneAndUpdate(
           { _id: comment.belongs_to },
@@ -115,7 +111,6 @@ exports.postCommentForAnArticle = (req, res, next) => {
       res.status(201).send({ comment });
     })
     .catch(err => {
-      console.log("I am in catch");
       next({ error: 404, message: "Invalid userId/ articleId" });
     });
 };
@@ -141,7 +136,7 @@ exports.updateArticleVoteCount = (req, res, next) => {
         res.status(201).send({ article });
       })
       .catch(err => next({ error: 404, message: "route not found" }));
-  } else next({ status: 404, message: "Route not found" });
+  } else next({ status: 400, message: "bad request" });
 };
 
 exports.updateCommentVote = (req, res, next) => {
@@ -170,7 +165,7 @@ exports.updateCommentVote = (req, res, next) => {
         res.status(201).send({ comment });
       })
       .catch(err => next({ error: 404, message: "route not found" }));
-  } else next({ status: 404, message: "Route not found" });
+  } else next({ status: 400, message: "bad request" });
 };
 
 exports.deleteCommentById = (req, res, next) => {

@@ -1,5 +1,5 @@
 process.env.NODE_ENV = "test";
-const DB_URL = require("../config");
+const DB_URL = require("../config").DB;
 const { expect } = require("chai");
 const app = require("../app"); // this will also connect to right db
 const request = require("supertest")(app);
@@ -175,7 +175,6 @@ describe("/", () => {
         });
     });
   });
-
   describe("api/articles/:article_id/comments", () => {
     it("Gets the comments for an individual article", () => {
       return request
@@ -280,6 +279,18 @@ describe("/", () => {
     });
   });
 
+  // error handling tests, passing bad request
+  describe("/api/comments/:comment_id?vote=upside", () => {
+    it("/api/comments/:comment_id?vote=upside", () => {
+      return request
+        .put(`/api/comments/${seedComments[0]._id}?vote=upside`)
+        .expect(400)
+        .then(res => {
+          expect(res.body.message).to.equal("bad request");
+        });
+    });
+  });
+
   //DELETE /api/comments/:comment_id
   describe("/api/comments/:comment_id", () => {
     it("Delete /api/comments/:comment_id", () => {
@@ -294,25 +305,6 @@ describe("/", () => {
             .then(res => {
               expect(res.body.article[0].comments).to.equal(0); // as comment been deleted
             });
-        });
-    });
-  });
-
-  describe("api/users", () => {
-    it("Gets the json object from all the users", () => {
-      return request
-        .get("/api/users")
-        .expect(200)
-        .then(res => {
-          const keys = ["username", "name", "avatar_url", "_id", "__v"];
-          expect(res.body).to.have.all.keys("users");
-          expect(res.body.users[0]).to.have.all.keys(...keys);
-          expect(res.body.users[0].username).to.equal("butter_bridge");
-          expect(res.body.users[0].name).to.equal("jonny");
-          expect(res.body.users[0].avatar_url).to.equal(
-            "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
-          );
-          expect(res.body.users.length).to.equal(2);
         });
     });
   });
