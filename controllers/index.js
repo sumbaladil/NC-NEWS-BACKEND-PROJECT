@@ -38,7 +38,7 @@ exports.postArticleForCertainTopic = (req, res, next) => {
     created_by: req.body.created_by
   })
     .then(article => {
-      res.status(201).send({ article });
+      res.status(201).send({ articles });
     })
     .catch(err => next({ error: 404, message: "Article does not exist" }));
 };
@@ -85,7 +85,7 @@ exports.getAnIndiviualArticle = (req, res, next) => {
     .populate("belongs_to", "slug ")
     .populate("created_by", "username")
     .then(article => {
-      res.send({ article });
+      res.send({ articles });
     })
     .catch(err => next({ error: 404, message: "Article does not exist" }));
 };
@@ -109,7 +109,7 @@ exports.postCommentForAnArticle = (req, res, next) => {
       ]);
     })
     .then(([result, comment]) => {
-      res.status(201).send({ comment });
+      res.status(201).send({ comments });
     })
     .catch(err => {
       next({ error: 404, message: "Invalid userId/ articleId" });
@@ -124,7 +124,7 @@ exports.updateArticleVoteCount = (req, res, next) => {
       { new: true }
     )
       .then(article => {
-        res.status(201).send({ article });
+        res.status(201).send({ articles });
       })
       .catch(err => next(err));
   } else if (req.query.vote === "down") {
@@ -134,7 +134,7 @@ exports.updateArticleVoteCount = (req, res, next) => {
       { new: true }
     )
       .then(article => {
-        res.status(201).send({ article });
+        res.status(201).send({ articles });
       })
       .catch(err => next({ error: 404, message: "route not found" }));
   } else next({ status: 400, message: "bad request" });
@@ -151,7 +151,7 @@ exports.updateCommentVote = (req, res, next) => {
       .populate("belongs_to", "title")
 
       .then(comment => {
-        res.status(201).send({ comment });
+        res.status(201).send({ comments });
       })
       .catch(err => next({ error: 404, message: "route not found" }));
   } else if (req.query.vote === "down") {
@@ -163,7 +163,7 @@ exports.updateCommentVote = (req, res, next) => {
       .populate("created_by", "name")
       .populate("belongs_to", "title")
       .then(comment => {
-        res.status(201).send({ comment });
+        res.status(201).send({ comments });
       })
       .catch(err => next({ error: 404, message: "route not found" }));
   } else next({ status: 400, message: "bad request" });
@@ -183,7 +183,7 @@ exports.deleteCommentById = (req, res, next) => {
     })
 
     .then(([article, comment]) => {
-      res.send({ comment });
+      res.send({ comments });
     })
     .catch(err => next({ status: 404, message: `Comment does not exist` }));
 };
@@ -191,7 +191,7 @@ exports.deleteCommentById = (req, res, next) => {
 exports.getUserById = (req, res, next) => {
   return Users.findById({ _id: req.params.username })
     .then(user => {
-      res.send({ user });
+      res.send({ users });
     })
     .catch(err => {
       next({ error: 404, message: "User id is invalid" });
@@ -203,7 +203,7 @@ exports.getCommentById = (req, res, next) => {
     .then(comment => {
       if (comment === null)
         next({ error: 404, message: "Comment does not exist" });
-      else res.send({ comment });
+      else res.send({ comments });
     })
     .catch(err => {
       next({ error: 404, message: "Comment id is invalid" });
