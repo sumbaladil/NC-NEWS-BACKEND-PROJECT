@@ -91,6 +91,7 @@ exports.getAnIndiviualArticle = (req, res, next) => {
 };
 
 exports.postCommentForAnArticle = (req, res, next) => {
+  console.log(req.body);
   return Comments.create({
     body: req.body.body,
     belongs_to: req.params.article_id,
@@ -99,9 +100,10 @@ exports.postCommentForAnArticle = (req, res, next) => {
     created_at: new Date().toLocaleString()
   })
     .then(comments => {
+      console.log(comments);
       return Promise.all([
         Articles.findOneAndUpdate(
-          { _id: comment.belongs_to },
+          { _id: comments.belongs_to },
           { $inc: { comments: 1 } },
           { new: true }
         ),
@@ -112,7 +114,7 @@ exports.postCommentForAnArticle = (req, res, next) => {
       res.status(201).send({ comments });
     })
     .catch(err => {
-      next({ error: 404, message: "Invalid userId/ articleId" });
+      next({ error: 404, message: "***Invalid userId/ articleId" });
     });
 };
 

@@ -5,7 +5,7 @@ const DB = process.env.DB || require("./config").DB;
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express();
-app.use(bodyParser());
+app.use(bodyParser.json());
 app.use(cors());
 
 mongoose
