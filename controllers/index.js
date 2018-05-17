@@ -45,6 +45,7 @@ exports.postArticleForCertainTopic = (req, res, next) => {
 exports.getAllCommentsForAnArticle = (req, res, next) => {
   return Comments.find({ belongs_to: req.params.article_id })
     .populate("belongs_to", "title")
+    .populate("created_by")
     .then(comments => {
       res.send({ comments });
     })
