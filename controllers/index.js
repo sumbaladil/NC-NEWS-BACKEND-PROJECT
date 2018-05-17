@@ -84,7 +84,7 @@ exports.getAnIndiviualArticle = (req, res, next) => {
   return Articles.find({ _id: req.params.article_id })
     .populate("belongs_to", "slug ")
     .populate("created_by", "username")
-    .then(article => {
+    .then(articles => {
       res.send({ articles });
     })
     .catch(err => next({ error: 404, message: "Article does not exist" }));
