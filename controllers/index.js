@@ -37,7 +37,7 @@ exports.postArticleForCertainTopic = (req, res, next) => {
     belongs_to: req.params.topic_id,
     created_by: req.body.created_by
   })
-    .then(article => {
+    .then(articles => {
       res.status(201).send({ articles });
     })
     .catch(err => next({ error: 404, message: "Article does not exist" }));
@@ -98,17 +98,17 @@ exports.postCommentForAnArticle = (req, res, next) => {
     votes: 0,
     created_at: new Date().toLocaleString()
   })
-    .then(comment => {
+    .then(comments => {
       return Promise.all([
         Articles.findOneAndUpdate(
           { _id: comment.belongs_to },
           { $inc: { comments: 1 } },
           { new: true }
         ),
-        comment
+        comments
       ]);
     })
-    .then(([result, comment]) => {
+    .then(([result, comments]) => {
       res.status(201).send({ comments });
     })
     .catch(err => {
@@ -123,7 +123,7 @@ exports.updateArticleVoteCount = (req, res, next) => {
       { $inc: { votes: 1 } },
       { new: true }
     )
-      .then(article => {
+      .then(articles => {
         res.status(201).send({ articles });
       })
       .catch(err => next(err));
@@ -133,7 +133,7 @@ exports.updateArticleVoteCount = (req, res, next) => {
       { $inc: { votes: -1 } },
       { new: true }
     )
-      .then(article => {
+      .then(articles => {
         res.status(201).send({ articles });
       })
       .catch(err => next({ error: 404, message: "route not found" }));
@@ -150,7 +150,7 @@ exports.updateCommentVote = (req, res, next) => {
       .populate("created_by", "name")
       .populate("belongs_to", "title")
 
-      .then(comment => {
+      .then(comments => {
         res.status(201).send({ comments });
       })
       .catch(err => next({ error: 404, message: "route not found" }));
@@ -162,7 +162,7 @@ exports.updateCommentVote = (req, res, next) => {
     )
       .populate("created_by", "name")
       .populate("belongs_to", "title")
-      .then(comment => {
+      .then(comments => {
         res.status(201).send({ comments });
       })
       .catch(err => next({ error: 404, message: "route not found" }));
@@ -171,18 +171,18 @@ exports.updateCommentVote = (req, res, next) => {
 
 exports.deleteCommentById = (req, res, next) => {
   return Comments.findByIdAndRemove({ _id: req.params.comment_id })
-    .then(comment => {
+    .then(comments => {
       return Promise.all([
         Articles.findOneAndUpdate(
-          { _id: comment.belongs_to },
+          { _id: comments.belongs_to },
           { $inc: { comments: -1 } },
           { new: true }
         ),
-        comment
+        comments
       ]);
     })
 
-    .then(([article, comment]) => {
+    .then(([article, comments]) => {
       res.send({ comments });
     })
     .catch(err => next({ status: 404, message: `Comment does not exist` }));
@@ -190,7 +190,7 @@ exports.deleteCommentById = (req, res, next) => {
 
 exports.getUserById = (req, res, next) => {
   return Users.findById({ _id: req.params.username })
-    .then(user => {
+    .then(users => {
       res.send({ users });
     })
     .catch(err => {
@@ -200,8 +200,8 @@ exports.getUserById = (req, res, next) => {
 
 exports.getCommentById = (req, res, next) => {
   return Comments.findById({ _id: req.params.comment_id })
-    .then(comment => {
-      if (comment === null)
+    .then(comments => {
+      if (comments === null)
         next({ error: 404, message: "Comment does not exist" });
       else res.send({ comments });
     })
