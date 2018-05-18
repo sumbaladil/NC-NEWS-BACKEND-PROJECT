@@ -55,7 +55,7 @@ exports.getAllCommentsForAnArticle = (req, res, next) => {
 exports.getAllArticles = (req, res, next) => {
   return Articles.find()
     .populate("belongs_to", "slug")
-    .populate("created_by", "name")
+    .populate("created_by")
     .then(articles => {
       res.send({ articles });
     })
