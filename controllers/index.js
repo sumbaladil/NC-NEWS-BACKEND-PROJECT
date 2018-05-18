@@ -38,8 +38,8 @@ exports.postArticleForCertainTopic = (req, res, next) => {
     created_by: req.body.created_by
   })
     .then(articles => {
-      Articles.find({ _id: `${articles._id}` })
-        .populate("belongs_to")
+      return Articles.find({ _id: `${articles._id}` })
+        .populate("belongs_to", "slug")
         .populate("created_by")
         .then(articles => {
           res.status(201).send({ articles });
