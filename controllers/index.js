@@ -38,7 +38,12 @@ exports.postArticleForCertainTopic = (req, res, next) => {
     created_by: req.body.created_by
   })
     .then(articles => {
-      res.status(201).send({ articles });
+      Articles.find({ _id: `${articles._id}` })
+        .populate("belongs_to")
+        .populate("created_by")
+        .then(articles => {
+          res.status(201).send({ articles });
+        });
     })
     .catch(err => next({ error: 404, message: "Article does not exist" }));
 };
