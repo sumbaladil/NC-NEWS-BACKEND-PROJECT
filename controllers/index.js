@@ -35,7 +35,8 @@ exports.postArticleForCertainTopic = (req, res, next) => {
     title: req.body.title,
     body: req.body.body,
     belongs_to: req.params.topic_id,
-    created_by: req.body.created_by
+    created_by: req.body.created_by,
+    comments: 0
   })
     .then(articles => {
       return Articles.find({ _id: `${articles._id}` })
