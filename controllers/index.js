@@ -22,7 +22,7 @@ exports.getTopicById = (req, res, next) => {
 exports.getArticleForCertainTopic = (req, res, next) => {
   return Articles.find({ belongs_to: req.params.topic })
     .populate("belongs_to", "slug")
-    .populate("created_by", "name")
+    .populate("created_by")
     .then(articles => {
       res.send({ articles });
     })
