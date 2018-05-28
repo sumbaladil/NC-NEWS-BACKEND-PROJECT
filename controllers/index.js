@@ -89,7 +89,7 @@ exports.getAllUsers = (req, res, next) => {
 exports.getAnIndiviualArticle = (req, res, next) => {
   return Articles.find({ _id: req.params.article_id })
     .populate("belongs_to", "slug ")
-    .populate("created_by", "username")
+    .populate("created_by")
     .then(articles => {
       res.send({ articles });
     })
