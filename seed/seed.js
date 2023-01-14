@@ -9,6 +9,12 @@ const {
 
 function seedDB(topicsData, userData, articlesData) {
   let users;
+  
+  mongoose.set('useNewUrlParser', true);
+  mongoose.set('useFindAndModify', false);
+  mongoose.set('useCreateIndex', true);
+  mongoose.set('useUnifiedTopology', true);
+  
   return mongoose.connection
     .dropDatabase()
     .then(() => {

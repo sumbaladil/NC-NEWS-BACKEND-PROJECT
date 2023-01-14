@@ -8,7 +8,12 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-mongoose
+  mongoose.set('useNewUrlParser', true);
+  mongoose.set('useFindAndModify', false);
+  mongoose.set('useCreateIndex', true);
+  mongoose.set('useUnifiedTopology', true);
+
+  mongoose
   .connect(DB)
   .then(() => {
     console.log(`connected to ${DB}`);
