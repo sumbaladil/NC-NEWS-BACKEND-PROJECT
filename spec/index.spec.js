@@ -56,17 +56,23 @@ describe("/", () => {
             "votes",
             "body",
             "belongs_to",
+            "comments",
             "created_by",
             "_id",
             "__v"
           ];
-          expect(res.body).to.have.all.keys("article");
-          expect(res.body.article).to.have.all.keys(...keys);
-          expect(res.body.article.title).to.equal(newArticle.title);
-          expect(res.body.article.votes).to.equal(newArticle.votes);
-          expect(res.body.article.body).to.equal(newArticle.body);
-          expect(res.body.article.belongs_to).to.equal(`${seedTopics[0]._id}`);
-          expect(res.body.article.created_by).to.equal(`${seedUsers[0]._id}`);
+          expect(res.body).to.have.all.keys("articles");
+
+          expect(res.body.articles[0]).to.have.all.keys(...keys);
+          expect(res.body.articles[0].title).to.equal(newArticle.title);
+          expect(res.body.articles[0].votes).to.equal(newArticle.votes);
+          expect(res.body.articles[0].body).to.equal(newArticle.body);
+          expect(res.body.articles[0].belongs_to._id).to.equal(
+            `${seedTopics[0]._id}`
+          );
+          expect(res.body.articles[0].created_by._id).to.equal(
+            `${seedUsers[0]._id}`
+          );
         });
     });
   });
@@ -157,19 +163,19 @@ describe("/", () => {
             "_id",
             "__v"
           ];
-          expect(res.body).to.have.all.keys("article");
-          expect(res.body.article[0]).to.have.all.keys(...keys);
-          expect(res.body.article[0]._id).to.equal(`${seedArticles[0]._id}`);
-          expect(res.body.article[0].title).to.equal(
+          expect(res.body).to.have.all.keys("articles");
+          expect(res.body.articles[0]).to.have.all.keys(...keys);
+          expect(res.body.articles[0]._id).to.equal(`${seedArticles[0]._id}`);
+          expect(res.body.articles[0].title).to.equal(
             "Living in the shadow of a great man"
           );
-          expect(res.body.article[0].body).to.equal(
+          expect(res.body.articles[0].body).to.equal(
             "I find this existence challenging"
           );
-          expect(res.body.article[0].belongs_to._id).to.equal(
+          expect(res.body.articles[0].belongs_to._id).to.equal(
             `${seedTopics[0]._id}`
           );
-          expect(res.body.article[0].created_by._id).to.equal(
+          expect(res.body.articles[0].created_by._id).to.equal(
             String(seedUsers[0]._id)
           );
         });
@@ -195,7 +201,7 @@ describe("/", () => {
           expect(res.body.comments[0].belongs_to._id).to.equal(
             `${seedArticles[0]._id}`
           );
-          expect(res.body.comments[0].created_by).to.equal(
+          expect(res.body.comments[0].created_by._id).equal(
             `${seedUsers[0]._id}`
           );
         });
@@ -223,19 +229,19 @@ describe("/", () => {
             "created_by",
             "__v"
           ];
-          expect(res.body).to.have.all.keys("comment");
-          expect(res.body.comment).to.have.all.keys(...keys);
-          expect(res.body.comment.belongs_to).to.equal(
+          expect(res.body).to.have.all.keys("comments");
+          expect(res.body.comments).to.have.all.keys(...keys);
+          expect(res.body.comments.belongs_to).to.equal(
             `${seedArticles[1]._id}`
           );
-          expect(res.body.comment.created_by).to.equal(
+          expect(res.body.comments.created_by).to.equal(
             String(seedUsers[0]._id)
           );
           return request
             .get(`/api/articles/${seedArticles[1]._id}`)
             .expect(200)
             .then(res => {
-              expect(res.body.article[0].comments).to.equal(
+              expect(res.body.articles[0].comments).to.equal(
                 seedArticles[1].comments + 1
               ); // comment count incremented by 1
             });
@@ -260,9 +266,9 @@ describe("/", () => {
             "_id",
             "__v"
           ];
-          expect(res.body).to.have.all.keys("article");
-          expect(res.body.article).to.have.all.keys(...keys);
-          expect(res.body.article.votes).to.equal(1); //one vote added
+          expect(res.body).to.have.all.keys("articles");
+          expect(res.body.articles).to.have.all.keys(...keys);
+          expect(res.body.articles.votes).to.equal(1); //one vote added
         });
     });
   });
@@ -274,7 +280,7 @@ describe("/", () => {
         .put(`/api/comments/${seedComments[0]._id}?vote=up`)
         .expect(201)
         .then(res => {
-          expect(res.body.comment.votes).to.equal(1); //vote count added
+          expect(res.body.comments.votes).to.equal(1); //vote count added
         });
     });
   });
@@ -298,12 +304,12 @@ describe("/", () => {
         .delete(`/api/comments/${seedComments[0]._id}`)
         .expect(200)
         .then(res => {
-          expect(res.body.comment._id).to.equal(`${seedComments[0]._id}`); //vote count added
+          expect(res.body.comments._id).to.equal(`${seedComments[0]._id}`); //vote count added
           return request
-            .get(`/api/articles/${res.body.comment.belongs_to}`)
+            .get(`/api/articles/${res.body.comments.belongs_to}`)
             .expect(200)
             .then(res => {
-              expect(res.body.article[0].comments).to.equal(0); // as comment been deleted
+              expect(res.body.articles[0].comments).to.equal(0); // as comment been deleted
             });
         });
     });
