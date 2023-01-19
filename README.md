@@ -10,7 +10,7 @@ Each comment is created by a random user (referenced by their \_id property) and
 Users can add/ delete comments on any article using article id and vote up and down for the article.
 Similarly user can vote up and down for any comment.
 
-I have also built a functioning API at https://northcoders-news-1.herokuapp.com/
+I have also built a functioning API at https://nc-news-backend-project.onrender.com
 
 ### Getting Started
 
@@ -131,7 +131,7 @@ npm run dev
 ```
 
 2: If you want to see all endpoints working, use POSTMAN and use `localhost:9090/api` and check its functionality.
-3: You can check my functioning API at https://northcoders-news-1.herokuapp.com.
+3: You can check my functioning API at https://nc-news-backend-project.onrender.com
 
 ### Routes
 
@@ -233,17 +233,17 @@ Returns a JSON object with the profile data for the specified user.
 
 ### Deployment
 
-This project has been deployed on [Heroku](https://www.heroku.com)
-Its development data has been taken from [Mlab](https://mlab.com) which was seeded by me before project got in production environment.
+This project has been deployed on [render](https://render.com/)
+The database for the project has been deployed on [MongoDB Atlas](https://www.mongodb.com/atlas/database)
 
 ### Built With
 
-* [Restful APIs]()
-* [node.js framework](https://nodejs.org)
-* [Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
-* [Express server](https://www.npmjs.com/package/express)
-* [MongoDB]()
-* [mongoose package](https://www.npmjs.com/package/mongooses)
+- [Restful APIs]()
+- [node.js framework](https://nodejs.org)
+- [Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+- [Express server](https://www.npmjs.com/package/express)
+- [MongoDB]()
+- [mongoose package](https://www.npmjs.com/package/mongooses)
 
 ### Author & Developer
 
